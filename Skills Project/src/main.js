@@ -1,28 +1,28 @@
 // src/main.js
-import { createApp } from 'vue'
-import { createPinia } from 'pinia'
-import App from './App.vue'
-import router from './router'
-import { useUserStore } from './stores/userStore' // Import the user store
-import './assets/main.css'
-import { supabase } from './lib/supabaseClient'
+import { createApp } from 'vue';
+import { createPinia } from 'pinia';
+import App from './App.vue';
+import router from './router';
+import { useUserStore } from './stores/userStore'; // Import the user store
+import './assets/main.css';
+import { supabase } from './lib/supabaseClient';
 
-const app = createApp(App)
-const pinia = createPinia()
-app.use(pinia)
-app.use(router)
+const app = createApp(App);
+const pinia = createPinia();
+app.use(pinia); // Register Pinia first
+app.use(router);
 
-// Fetch user session when the app initializes
-const userStore = useUserStore()
+// Ensure Pinia is fully set up before using the store
+app.mount('#app');
+
+// Fetch user session once the app is mounted
+const userStore = useUserStore();
 
 userStore
-  .initializeUser()
+  .fetchUser() // Renaming to fetchUser instead of initializeUser
   .catch((error) => {
-    console.error('Error during session restoration:', error.message)
-  })
-  .finally(() => {
-    // Mount the app regardless of session restoration success
-    app.mount('#app')
-  })
+    console.error('Error during session restoration:', error.message);
+  });
 
-window.supabase = supabase
+// Attach Supabase globally (optional)
+window.supabase = supabase;

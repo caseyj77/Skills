@@ -1,41 +1,45 @@
-import { defineStore } from 'pinia'
-import { supabase } from '@/lib/supabaseClient'
+import { defineStore } from 'pinia';
+import { supabase } from '@/lib/supabaseClient';
 
 export const useSkillsStore = defineStore('skills', {
   state: () => ({
-    skills: [], // All skills
-    tasks: {}, // Tasks grouped by skill_id
-    loadingTasks: {}, // Track loading state for each skill
+    skills: [],
+    tasks: {},
+    loading: false,
   }),
 
   actions: {
     async fetchSkills() {
+      this.loading = true;
       try {
-        const { data, error } = await supabase.from('skills').select('*')
-        if (error) throw error
-        this.skills = data || [] // Ensure skills is always an array
+        const { data, error } = await supabase.from('skills').select('*');
+        if (error) throw error;
+        this.skills = data || [];
       } catch (error) {
-        console.error('Error fetching skills:', error)
-        this.skills = [] // Fallback to an empty array
+        console.error('Error fetching skills:', error);
+        this.skills = [];
+      } finally {
+        this.loading = false;
       }
     },
 
     async fetchTasks(skill_id) {
-      if (this.tasks[skill_id]) return // Skip fetch if already cached
+      if (this.tasks[skill_id]) return;
 
-      this.loadingTasks[skill_id] = true
-
+      this.loading = true;
       try {
-        const { data, error } = await supabase.from('tasks').select('*').eq('skill_id', skill_id)
-        if (error) throw error
-
-        this.tasks[skill_id] = data || [] // Default to an empty array if no tasks
+        const { data, error } = await supabase
+          .from('tasks')
+          .select('*')
+          .eq('skill_id', skill_id);
+        if (error) throw error;
+        this.tasks[skill_id] = data || [];
       } catch (error) {
-        console.error(`Error fetching tasks for skill ${skill_id}:`, error)
-        this.tasks[skill_id] = [] // Fallback to an empty array
+        console.error(`Error fetching tasks for skill ${skill_id}:`, error);
+        this.tasks[skill_id] = [];
       } finally {
-        this.loadingTasks[skill_id] = false
+        this.loading = false;
       }
     },
   },
-})
+});

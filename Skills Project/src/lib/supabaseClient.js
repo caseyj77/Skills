@@ -1,14 +1,14 @@
-// src/lib/supabaseClient.js
-// import { createClient } from '@supabase/supabase-js'
 
-// const supabaseUrl = import.meta.env.VITE_SUPABASE_URL
-// const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY
+import { createClient } from '@supabase/supabase-js'
 
-// const supabase = createClient(supabaseUrl, supabaseAnonKey, {
-//   auth: {
-//     persistSession: true, // Enable session persistence
-//     detectSessionInUrl: true, // Handle OAuth redirects
-//   },
-// })
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL
+const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY
 
-// export { supabase }
+const supabase = createClient(supabaseUrl, supabaseAnonKey, {
+  auth: {
+    persistSession: true, // Enable session persistence
+    detectSessionInUrl: true, // Handle OAuth redirects
+  },
+})
+
+export { supabase }
