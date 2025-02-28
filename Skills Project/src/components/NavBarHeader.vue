@@ -12,15 +12,15 @@
 </template>
 
 <style scoped>
+/* Navigation Bar */
 nav {
-  background-color: #f8f9fa;
+  background-color: var(--charcoal-black);
   padding: 10px;
-  
 }
 
 ul {
   display: flex;
-  gap: 10px;
+  gap: 15px;
   list-style: none;
   padding: 0;
   margin: 0;
@@ -34,11 +34,12 @@ li {
 
 a {
   text-decoration: none;
-  color: #333;
+  color: var(--soft-glow-gray);
   font-weight: bold;
+  transition: color 0.3s;
 }
 
 a:hover {
-  color: #007bff;
+  color: var(--neon-cyan);
 }
 </style>

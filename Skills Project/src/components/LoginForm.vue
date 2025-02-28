@@ -62,8 +62,8 @@ async function handleLogin() {
   max-width: 400px;
   margin: 2rem auto;
   padding: 2rem;
-  background-color: var(--soft-glow);
-  border: 1px solid var(--dusky-blue);
+  background-color: var(--dark-violet);
+  border: 1px solid var(--muted-indigo);
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
@@ -72,16 +72,19 @@ async function handleLogin() {
 label {
   font-weight: bold;
   margin-bottom: 0.5rem;
+  color: var(--soft-glow-gray);
 }
 
 /* Input Fields */
 input {
   width: 100%;
   padding: 0.5rem;
-  border: 1px solid var(--dusky-blue);
+  border: 1px solid var(--muted-indigo);
   border-radius: 4px;
   font-size: 1rem;
   margin-bottom: 1rem;
+  background-color: var(--charcoal-black);
+  color: var(--soft-glow-gray);
 }
 
 /* Button Container */
@@ -92,8 +95,8 @@ input {
 
 /* Button Styling */
 button {
-  background-color: var(--midnight-depth);
-  color: var(--soft-glow);
+  background-color: var(--deep-midnight-blue);
+  color: var(--soft-glow-gray);
   padding: 0.75rem 1.5rem;
   border: none;
   border-radius: 5px;
@@ -103,6 +106,6 @@ button {
 }
 
 button:hover {
-  background-color: var(--dusky-blue);
+  background-color: var(--hot-magenta);
 }
 </style>

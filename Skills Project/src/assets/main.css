@@ -1,7 +1,26 @@
 :root {
-  --soft-glow: #e9dadd; /* Light Neutral */
-  --twilight-mist: #8394b2; /* Cool Tone */
-  --dusky-blue: #525564; /* Muted Dark */
-  --midnight-depth: #232d48; /* Deep Accent */
-  --eclipse-shadow: #160d12; /* High Contrast */
+  /* Primary Colors */
+  --neon-cyan: #00E5FF; /* Vibrant accent */
+  --electric-purple: #8A00E5; /* Sleek and modern */
+  --hot-magenta: #FF007A; /* Dynamic highlights */
+
+  /* Secondary Colors */
+  --deep-midnight-blue: #1A1F38; /* Dark grounding background */
+  --dark-violet: #460A63; /* Strong futuristic contrast */
+  --steel-blue: #607D99; /* Muted balance tone */
+
+  /* Neutral Colors */
+  --charcoal-black: #121212; /* Perfect for dark mode elements */
+  --soft-glow-gray: #E9DADD; /* Light neutral balance */
+  --muted-indigo: #525564; /* Secondary text color */
+}
+
+
+/* Global Background */
+body {
+  background-color: var(--deep-midnight-blue);
+  color: var(--soft-glow-gray);
+  font-family: Arial, Helvetica, sans-serif;
+  margin: 0;
+  padding: 0;
 }
