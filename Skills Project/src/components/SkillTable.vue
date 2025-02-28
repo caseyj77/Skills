@@ -1,24 +1,20 @@
 <script setup>
 import { useSkillsStore } from '@/stores/skillsStore'
-import { onMounted, ref } from 'vue'
+import { onMounted, reactive } from 'vue'
 
 const skillsStore = useSkillsStore()
+const expandedSkills = reactive({}) // Using reactive instead of ref
 
-// Load skills on component mount
 onMounted(() => {
   if (!skillsStore.skills.length) {
     skillsStore.fetchSkills()
   }
 })
 
-// Track which skills are expanded using a reactive Map
-const expandedSkills = ref({})
-
-// Toggle expanded state and fetch tasks for a skill
 const toggleSkill = (skill_id) => {
-  expandedSkills.value[skill_id] = !expandedSkills.value[skill_id]
+  expandedSkills[skill_id] = !expandedSkills[skill_id]
 
-  if (expandedSkills.value[skill_id]) {
+  if (expandedSkills[skill_id] && !skillsStore.tasks[skill_id]) {
     skillsStore.fetchTasks(skill_id)
   }
 }
@@ -47,6 +43,7 @@ const toggleSkill = (skill_id) => {
                 class="expand-button"
                 @click="toggleSkill(skill.skill_id)"
                 :aria-label="expandedSkills[skill.skill_id] ? 'Collapse' : 'Expand'"
+                :disabled="skillsStore.loadingTasks[skill.skill_id]"
               >
                 {{ expandedSkills[skill.skill_id] ? '-' : '+' }}
               </button>
@@ -92,10 +89,10 @@ const toggleSkill = (skill_id) => {
   max-width: 900px;
   margin: 20px auto;
   padding: 20px;
-  background: var(--bg-color, #fff);
+  background: var(--deep-midnight-blue);
   border-radius: 8px;
-  font-family: 'Roboto', sans-serif;
-  color: var(--text-dark, #333);
+  font-family: Arial, Helvetica, sans-serif;
+  color: var(--soft-glow-gray);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
@@ -105,58 +102,65 @@ const toggleSkill = (skill_id) => {
   border-collapse: collapse;
   border-spacing: 0;
   font-size: 0.95rem;
-  background: var(--bg-color, #fff);
+  background: var(--deep-midnight-blue);
+  color: var(--soft-glow-gray);
 }
 
 /* Header styling */
 #skills thead th {
   text-align: left;
   padding: 12px;
-  background: var(--header-bg, #f1f1f1);
-  color: var(--header-text, #222);
+  background: var(--steel-blue);
+  color: var(--soft-glow-gray);
   font-weight: bold;
-  border-bottom: 2px solid var(--row-dark, #ddd);
+  border-bottom: 2px solid var(--charcoal-black);
 }
 
 /* Skill Row */
 .skill-row {
-  background: var(--row-light, #f9f9f9);
+  background: var(--dark-violet);
   transition: background-color 0.3s ease;
 }
 
 .skill-row:nth-child(even) {
-  background: var(--row-dark, #eaeaea);
+  background: var(--steel-blue);
 }
 
 .skill-row:hover {
-  background: var(--hover-color, #dcdcdc);
+  background: var(--hot-magenta);
   cursor: pointer;
 }
 
 /* Task Row */
 .task-row {
-  background: var(--row-dark, #f3f3f3);
-  color: var(--text-light, #444);
+  background: var(--muted-indigo);
+  color: var(--soft-glow-gray);
 }
 
 .task-row td {
   padding: 12px 16px;
-  border-top: 1px solid var(--row-light, #ddd);
+  border-top: 1px solid var(--steel-blue);
 }
 
 /* Expand Button */
 .expand-button {
   cursor: pointer;
-  background: transparent;
-  border: 1px solid var(--text-dark, #333);
+  background: var(--electric-purple);
+  border: 1px solid var(--charcoal-black);
   padding: 4px 8px;
   border-radius: 4px;
   font-size: 1rem;
+  color: var(--soft-glow-gray);
   transition: background 0.2s;
 }
 
 .expand-button:hover {
-  background: var(--hover-color, #ddd);
+  background: var(--hot-magenta);
+}
+
+.expand-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
 }
 
 /* Responsive styling */

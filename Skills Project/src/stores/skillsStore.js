@@ -31,7 +31,7 @@ export const useSkillsStore = defineStore('skills', {
         const { data, error } = await supabase
           .from('tasks')
           .select('*')
-          .eq('skill_id', skill_id);
+          .eq('skill_id', skill_id);   // this is a filtier from supabase .eq('column', 'Equal to') 
         if (error) throw error;
         this.tasks[skill_id] = data || [];
       } catch (error) {
