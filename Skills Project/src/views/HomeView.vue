@@ -1,19 +1,3 @@
-<template>
-  <div>
-    <h1>Welcome, {{ userStore.profile?.first_name || 'Guest' }}</h1>
-    <p v-if="userStore.profile">Your Role: {{ userStore.profile.role }}</p>
-
-    <h2>Your Skill Ratings</h2>
-    <ul>
-      <li v-for="rating in userSkills" :key="rating.skill_id">
-        <strong>{{ rating.skill_name }}</strong> - Rating: {{ rating.rating }}/5
-      </li>
-    </ul>
-
-    <button v-if="userStore.user" @click="userStore.signOut">Sign Out</button>
-  </div>
-</template>
-
 <script>
 import { useUserStore } from '@/stores/userStore';
 import { onMounted, ref } from 'vue';
@@ -54,3 +38,22 @@ export default {
   },
 };
 </script>
+
+
+<template>
+  <div>
+    <h1>Welcome, {{ userStore.profile?.first_name || 'Guest' }}</h1>
+    <p v-if="userStore.profile">Your Role: {{ userStore.profile.role }}</p>
+
+    <h2>Your Skill Ratings</h2>
+    <ul>
+      <li v-for="rating in userSkills" :key="rating.skill_id">
+        <strong>{{ rating.skill_name }}</strong> - Rating: {{ rating.rating }}/5
+      </li>
+    </ul>
+
+    <button v-if="userStore.user" @click="userStore.signOut">Sign Out</button>
+  </div>
+</template>
+
+
