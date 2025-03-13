@@ -9,8 +9,13 @@
         <span class="brand-name">SkillForge</span>
     </div>
     <div class="navbar-middle">
-        Links will go here
-    </div>
+  <ul class="nav-links">
+    <li><RouterLink to="/">Home</RouterLink></li>
+    <li><RouterLink to="/skills">Skills</RouterLink></li>
+    <li><RouterLink to="/login">Login</RouterLink></li>
+  </ul>
+</div>
+
     <div class="navbar-right">
         <div class="user-profile">
             <img src="../assets/images/user-avatar.svg" alt="User Avatar" class="avatar">
@@ -53,11 +58,36 @@
 }
 
 /* Middle section (flex-grow for dynamic width) */
+/* Middle navigation */
 .navbar-middle {
   flex-grow: 1;
   display: flex;
-  justify-content: center; /* Center future links */
+  justify-content: center;
 }
+
+/* Navigation links */
+.nav-links {
+  display: flex;
+  gap: 10px; /* Ensures 10px space between links */
+  list-style: none; /* Removes bullet points */
+  padding: 0;
+  margin: 0;
+}
+
+.nav-links a {
+  text-decoration: none;
+  color: var(--dusky-blue); /* Matches the theme */
+  font-weight: 500;
+  padding: 8px 12px;
+  border-radius: 5px;
+  transition: background-color 0.3s ease-in-out;
+}
+
+.nav-links a:hover {
+  background-color: var(--twilight-mist);
+  color: white;
+}
+
 
 /* Right section (user profile) */
 .navbar-right {
