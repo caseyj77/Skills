@@ -6,6 +6,7 @@ export const useUserStore = defineStore('user', {
     user: null,
     profile: null,
     loading: false,
+    errorMessage: null, // 👈 Add this
   }),
 
   actions: {
@@ -32,6 +33,31 @@ export const useUserStore = defineStore('user', {
       } catch (error) {
         console.error('Error fetching user profile:', error);
         this.profile = null;
+      }
+    },
+
+    async authUser(email, password) {
+      this.loading = true;
+      this.errorMessage = null; // clear any old errors
+
+      try {
+        const { data, error } = await supabase.auth.signInWithPassword({
+          email,
+          password,
+        });
+
+        if (error) {
+          this.errorMessage = error.message;
+          return;
+        }
+
+        this.user = data.user;
+        await this.fetchUserProfile(); // load the user's profile after login
+      } catch (err) {
+        this.errorMessage = 'Unexpected error logging in.';
+        console.error(err);
+      } finally {
+        this.loading = false;
       }
     },
 

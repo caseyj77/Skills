@@ -7,14 +7,15 @@ const userStore = useUserStore()
 const router = useRouter()
 
 // Check if the user is logged in
-const isLoggedIn = computed(() => !!userStore.authUser)
+const isLoggedIn = computed(() => !!userStore.user)
 
 // Handle logout action
-const handleLogout = () => {
-  userStore.signOut()
-  router.push('/')
+const handleLogout = async () => {
+  await userStore.signOut()
+  router.push('/login')
 }
 </script>
+
 
 <template>
   <nav class='navbar'>
