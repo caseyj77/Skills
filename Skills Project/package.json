@@ -12,12 +12,14 @@
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.49.1",
+    "dotenv": "^16.5.0",
     "pinia": "^3.0.1",
     "vue": "^3.5.13",
     "vue-router": "^4.5.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.20.0",
+    "@faker-js/faker": "^9.6.0",
     "@vitejs/plugin-vue": "^5.2.1",
     "@vue/eslint-config-prettier": "^10.2.0",
     "eslint": "^9.20.1",
