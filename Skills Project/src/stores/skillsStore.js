@@ -60,14 +60,14 @@ export const useSkillsStore = defineStore('skills', {
       }
     },
 
-    // 🧪 Placeholder for future use
-    async fetchUserSkills(user_id) {
-      // To be implemented later for user-specific ratings
-    },
+    // // 🧪 Placeholder for future use
+    // async fetchUserSkills(user_id) {
+    //   // To be implemented later for user-specific ratings
+    // },
 
-    async fetchTrainingResources(skill_id) {
-      // To be implemented later for resource links
-    },
+    // async fetchTrainingResources(skill_id) {
+    //   // To be implemented later for resource links
+    // },
 
     resetStore() {
       this.skills = [];
