@@ -58,4 +58,8 @@ export default {
       </li>
     </ul>
   </div>
+  <div class="p-6 bg-white rounded-lg shadow">
+    <h1 class="text-3xl font-bold text-blue-600">Tailwind is working!</h1>
+    <p class="text-gray-600">🎉 Your styles are being powered by Tailwind.</p>
+  </div>
 </template>
