@@ -1,7 +1,7 @@
 <script setup lang="js">
 import { ref, watch } from 'vue'
 
-// Props passed into the component
+// Props
 const props = defineProps({
   visible: Boolean,
   editSkill: {
@@ -10,13 +10,11 @@ const props = defineProps({
   },
 })
 
-// Reactive skill object for form binding
 const skill = ref({
   name: '',
   description: '',
 })
 
-// Watch for changes to editSkill to populate or reset form
 watch(
   () => props.editSkill,
   (newSkill) => {
@@ -32,10 +30,8 @@ watch(
   { immediate: true }
 )
 
-// Declare the emitted events
 const emit = defineEmits(['save', 'cancel'])
 
-// Form submission
 function handleSubmit() {
   emit('save', skill.value)
 }
@@ -43,45 +39,129 @@ function handleSubmit() {
 
 <template>
   <div
-    class="fixed top-0 right-0 w-full max-w-md h-full bg-white shadow-xl z-50 transition-transform duration-300"
-    :class="{ 'translate-x-0': visible, 'translate-x-full': !visible }"
+    class="form-panel"
+    :class="{ 'visible': visible, 'hidden': !visible }"
   >
-    <div class="flex justify-between items-center px-4 py-3 border-b">
-      <h2 class="text-xl font-semibold">
-        {{ editSkill ? 'Edit Skill' : 'Add New Skill' }}
-      </h2>
-      <button @click="emit('cancel')" class="text-gray-500 hover:text-black">
-        ✕
-      </button>
+    <div class="form-header">
+      <h2>{{ editSkill ? 'Edit Skill' : 'Add New Skill' }}</h2>
+      <button @click="emit('cancel')" class="close-btn">✕</button>
     </div>
 
-    <form class="p-4 space-y-4" @submit.prevent="handleSubmit">
-      <div>
-        <label class="block text-sm font-medium text-gray-700">Skill Name</label>
-        <input
-          type="text"
-          v-model="skill.name"
-          class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2"
-        />
+    <form class="form-body" @submit.prevent="handleSubmit">
+      <div class="form-group">
+        <label>Skill Name</label>
+        <input type="text" v-model="skill.name" />
       </div>
 
-      <div>
-        <label class="block text-sm font-medium text-gray-700">Description</label>
-        <textarea
-          v-model="skill.description"
-          class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2"
-          rows="4"
-        ></textarea>
+      <div class="form-group">
+        <label>Description</label>
+        <textarea v-model="skill.description" rows="4"></textarea>
       </div>
 
-      <div class="flex justify-end space-x-2">
-        <button type="button" @click="emit('cancel')" class="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300">
-          Cancel
-        </button>
-        <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
-          Save
-        </button>
+      <div class="form-actions">
+        <button type="button" @click="emit('cancel')" class="btn cancel">Cancel</button>
+        <button type="submit" class="btn save">Save</button>
       </div>
     </form>
   </div>
 </template>
+
+<style scoped>
+.form-panel {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 100%;
+  max-width: 420px;
+  height: 100%;
+  background-color: white;
+  box-shadow: -2px 0 10px rgba(0, 0, 0, 0.2);
+  z-index: 50;
+  transition: transform 0.3s ease;
+  transform: translateX(100%);
+}
+
+.form-panel.visible {
+  transform: translateX(0%);
+}
+
+.form-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px;
+  border-bottom: 1px solid #ccc;
+}
+
+.form-header h2 {
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+.close-btn {
+  background: none;
+  border: none;
+  font-size: 1.25rem;
+  color: #666;
+  cursor: pointer;
+}
+
+.close-btn:hover {
+  color: #000;
+}
+
+.form-body {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.form-group label {
+  display: block;
+  font-weight: 500;
+  margin-bottom: 4px;
+  color: #333;
+}
+
+.form-group input,
+.form-group textarea {
+  width: 100%;
+  padding: 8px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  font-size: 0.95rem;
+  resize: vertical;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.btn {
+  padding: 8px 16px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.btn.cancel {
+  background-color: #ddd;
+}
+
+.btn.cancel:hover {
+  background-color: #ccc;
+}
+
+.btn.save {
+  background-color: #2563eb;
+  color: white;
+}
+
+.btn.save:hover {
+  background-color: #1d4ed8;
+}
+</style>
