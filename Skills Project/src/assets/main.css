@@ -2,24 +2,22 @@
 @tailwind components;
 @tailwind utilities;
 
-
 :root {
   /* Primary Colors */
-  --neon-cyan: #00E5FF; /* Vibrant accent */
-  --electric-purple: #8A00E5; /* Sleek and modern */
-  --hot-magenta: #FF007A; /* Dynamic highlights */
+  --neon-cyan: #00e5ff; /* Vibrant accent */
+  --electric-purple: #8a00e5; /* Sleek and modern */
+  --hot-magenta: #ff007a; /* Dynamic highlights */
 
   /* Secondary Colors */
-  --deep-midnight-blue: #1A1F38; /* Dark grounding background */
-  --dark-violet: #460A63; /* Strong futuristic contrast */
-  --steel-blue: #607D99; /* Muted balance tone */
+  --deep-midnight-blue: #1a1f38; /* Dark grounding background */
+  --dark-violet: #460a63; /* Strong futuristic contrast */
+  --steel-blue: #607d99; /* Muted balance tone */
 
   /* Neutral Colors */
   --charcoal-black: #121212; /* Perfect for dark mode elements */
-  --soft-glow-gray: #E9DADD; /* Light neutral balance */
+  --soft-glow-gray: #e9dadd; /* Light neutral balance */
   --muted-indigo: #525564; /* Secondary text color */
 }
-
 
 /* Global Background */
 body {

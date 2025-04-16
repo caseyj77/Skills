@@ -16,11 +16,10 @@ const handleLogout = async () => {
 }
 </script>
 
-
 <template>
-  <nav class='navbar'>
+  <nav class="navbar">
     <div class="navbar-left">
-      <img src="../assets/images/SF Logo.webp" alt='SkillForge logo' class="logo">
+      <img src="../assets/images/SF Logo.webp" alt="SkillForge logo" class="logo" />
       <span class="brand-name">SkillForge</span>
     </div>
 
@@ -39,7 +38,7 @@ const handleLogout = async () => {
 
     <div class="navbar-right" v-if="isLoggedIn">
       <div class="user-profile">
-        <img src="../assets/images/user-avatar.svg" alt="User Avatar" class="avatar">
+        <img src="../assets/images/user-avatar.svg" alt="User Avatar" class="avatar" />
       </div>
     </div>
   </nav>
@@ -54,8 +53,8 @@ const handleLogout = async () => {
   position: relative;
   width: 100%;
   height: 60px;
-  background-color: #6A596B22;
-  color: #00E5FF;
+  background-color: #6a596b22;
+  color: #00e5ff;
   padding: 0 20px;
   box-sizing: border-box;
 }
@@ -85,7 +84,6 @@ const handleLogout = async () => {
   display: flex;
   justify-content: center;
 }
-
 
 /* Navigation links */
 .nav-links {
@@ -137,7 +135,8 @@ const handleLogout = async () => {
     height: auto;
     padding: 10px;
   }
-  .navbar-left, .navbar-right {
+  .navbar-left,
+  .navbar-right {
     width: 100%;
     justify-content: center;
     margin-bottom: 5px;

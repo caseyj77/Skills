@@ -27,7 +27,7 @@ watch(
       skill.value = { name: '', description: '' }
     }
   },
-  { immediate: true }
+  { immediate: true },
 )
 
 const emit = defineEmits(['save', 'cancel'])
@@ -38,10 +38,7 @@ function handleSubmit() {
 </script>
 
 <template>
-  <div
-    class="form-panel"
-    :class="{ 'visible': visible, 'hidden': !visible }"
-  >
+  <div class="form-panel" :class="{ visible: visible, hidden: !visible }">
     <div class="form-header">
       <h2>{{ editSkill ? 'Edit Skill' : 'Add New Skill' }}</h2>
       <button @click="emit('cancel')" class="close-btn">✕</button>

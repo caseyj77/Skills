@@ -1,62 +1,59 @@
-import { defineStore } from 'pinia';
-import { supabase } from '@/lib/supabaseClient';
+import { defineStore } from 'pinia'
+import { supabase } from '@/lib/supabaseClient'
 
 export const useSkillsStore = defineStore('skills', {
   state: () => ({
     skills: [],
     tasks: {},
-    taskLoading: {},        // ⬅️ Per-skill loading tracker
-    expandedSkills: [],     // ⬅️ Tracks which skill rows are expanded
+    taskLoading: {}, // ⬅️ Per-skill loading tracker
+    expandedSkills: [], // ⬅️ Tracks which skill rows are expanded
     loading: false,
   }),
 
   actions: {
     async fetchSkills() {
-      this.loading = true;
+      this.loading = true
       try {
         const { data, error } = await supabase
           .from('skills')
           .select('*')
-          .order('category', { ascending: true });
+          .order('category', { ascending: true })
 
-        if (error) throw error;
-        this.skills = data || [];
+        if (error) throw error
+        this.skills = data || []
       } catch (error) {
-        console.error('Error fetching skills:', error);
-        this.skills = [];
+        console.error('Error fetching skills:', error)
+        this.skills = []
       } finally {
-        this.loading = false;
+        this.loading = false
       }
     },
 
     async fetchTasks(skill_id) {
       // If already fetched, don’t re-fetch
-      if (this.tasks[skill_id]) return;
+      if (this.tasks[skill_id]) return
 
-      this.taskLoading[skill_id] = true;
+      this.taskLoading[skill_id] = true
       try {
-        const { data, error } = await supabase
-          .from('tasks')
-          .select('*')
-          .eq('skill_id', skill_id);
+        const { data, error } = await supabase.from('tasks').select('*').eq('skill_id', skill_id)
 
-        if (error) throw error;
-        this.tasks[skill_id] = data || [];
+        if (error) throw error
+        this.tasks[skill_id] = data || []
       } catch (error) {
-        console.error(`Error fetching tasks for skill ${skill_id}:`, error);
-        this.tasks[skill_id] = [];
+        console.error(`Error fetching tasks for skill ${skill_id}:`, error)
+        this.tasks[skill_id] = []
       } finally {
-        this.taskLoading[skill_id] = false;
+        this.taskLoading[skill_id] = false
       }
     },
 
     toggleSkillTasks(skill_id) {
-      const isExpanded = this.expandedSkills.includes(skill_id);
+      const isExpanded = this.expandedSkills.includes(skill_id)
       if (isExpanded) {
-        this.expandedSkills = this.expandedSkills.filter(id => id !== skill_id);
+        this.expandedSkills = this.expandedSkills.filter((id) => id !== skill_id)
       } else {
-        this.expandedSkills.push(skill_id);
-        this.fetchTasks(skill_id); // Fetch on demand
+        this.expandedSkills.push(skill_id)
+        this.fetchTasks(skill_id) // Fetch on demand
       }
     },
 
@@ -70,11 +67,11 @@ export const useSkillsStore = defineStore('skills', {
     // },
 
     resetStore() {
-      this.skills = [];
-      this.tasks = {};
-      this.taskLoading = {};
-      this.expandedSkills = [];
-      this.loading = false;
+      this.skills = []
+      this.tasks = {}
+      this.taskLoading = {}
+      this.expandedSkills = []
+      this.loading = false
     },
   },
-});
+})

@@ -27,12 +27,7 @@ const sidebarLinks = computed(() => {
 <template>
   <aside class="sidebar">
     <nav class="nav-list">
-      <RouterLink
-        v-for="link in sidebarLinks"
-        :key="link.path"
-        :to="link.path"
-        class="card-link"
-      >
+      <RouterLink v-for="link in sidebarLinks" :key="link.path" :to="link.path" class="card-link">
         {{ link.icon }} {{ link.name }}
       </RouterLink>
     </nav>
@@ -50,7 +45,6 @@ const sidebarLinks = computed(() => {
   box-shadow: 4px 0 8px var(--electric-purple);
   border-top: 1px solid var(--electric-purple);
   border-right: 1px solid var(--electric-purple);
-  
 }
 
 .nav-list {

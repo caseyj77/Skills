@@ -1,39 +1,39 @@
 <script setup lang="js">
-import { useUserStore } from '@/stores/userStore';
-import { onMounted, ref } from 'vue';
-import { supabase } from '@/lib/supabaseClient';
-import SideBar from '@/components/SideBar.vue';
+import { useUserStore } from '@/stores/userStore'
+import { onMounted, ref } from 'vue'
+import { supabase } from '@/lib/supabaseClient'
+import SideBar from '@/components/SideBar.vue'
 
-const userStore = useUserStore();
-const userSkills = ref([]);
-const loading = ref(true);
+const userStore = useUserStore()
+const userSkills = ref([])
+const loading = ref(true)
 
 async function fetchUserSkills() {
-  if (!userStore.user) return;
+  if (!userStore.user) return
 
   const { data, error } = await supabase
     .from('user_skills')
     .select('skill_id, rating, skills(name)')
     .eq('user_id', userStore.user.id)
-    .order('rating', { ascending: false });
+    .order('rating', { ascending: false })
 
   if (error) {
-    console.error('Error fetching user skills:', error);
-    return;
+    console.error('Error fetching user skills:', error)
+    return
   }
 
   userSkills.value = data.map((item) => ({
     skill_id: item.skill_id,
     skill_name: item.skills.name,
     rating: item.rating,
-  }));
+  }))
 }
 
 onMounted(async () => {
-  await userStore.fetchUser();
-  await fetchUserSkills();
-  loading.value = false;
-});
+  await userStore.fetchUser()
+  await fetchUserSkills()
+  loading.value = false
+})
 </script>
 
 <template>
