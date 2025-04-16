@@ -62,7 +62,7 @@ async function handleLogin() {
   max-width: 400px;
   margin: 2rem auto;
   padding: 2rem;
-  background-color: var(--dark-violet);
+  background-color: var(--electric-purple);
   border: 1px solid var(--muted-indigo);
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);

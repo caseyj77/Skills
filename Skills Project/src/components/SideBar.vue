@@ -47,8 +47,10 @@ const sidebarLinks = computed(() => {
   color: white;
   display: flex;
   flex-direction: column;
+  box-shadow: 4px 0 8px var(--electric-purple);
   border-top: 1px solid var(--electric-purple);
   border-right: 1px solid var(--electric-purple);
+  
 }
 
 .nav-list {
@@ -58,7 +60,7 @@ const sidebarLinks = computed(() => {
 }
 
 .card-link {
-  background-color: #373737;
+  background-color: var(--electric-purple);
   color: white;
   padding: 12px;
   border-radius: 8px;
