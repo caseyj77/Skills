@@ -11,6 +11,8 @@ export const useUserStore = defineStore('user', {
   }),
 
   actions: {
+
+
     async fetchUser() {
       try {
         const { data: sessionData, error: sessionError } = await supabase.auth.getSession()
@@ -72,7 +74,7 @@ export const useUserStore = defineStore('user', {
           return
         }
 
-        console.log('Login successful! Supabase data:', data)
+        //console.log('Login successful! Supabase data:', data)
 
         this.user = data.user
         await this.fetchUserProfile()

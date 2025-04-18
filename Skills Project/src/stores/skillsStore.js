@@ -11,6 +11,8 @@ export const useSkillsStore = defineStore('skills', {
   }),
 
   actions: {
+
+
     async fetchSkills() {
       this.loading = true
       try {
@@ -73,5 +75,25 @@ export const useSkillsStore = defineStore('skills', {
       this.expandedSkills = []
       this.loading = false
     },
+
+
+    async fetchSkillsByProfession(profession_id){
+      this.loading = true;
+      try {
+        const { data, error } = await supabase
+           .from('skills')
+           .select('*')
+           .eq('profession_id', profession_id);
+      if (error) throw error;
+      this.skills = data || [];
+
+      } catch (error) {
+        console.error('Error fetching skills by profession:', error)
+        this.skills=[];
+      } finally {
+        this.loading = false;
+      } 
+    },
+    
   },
 })

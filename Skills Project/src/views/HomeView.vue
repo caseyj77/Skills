@@ -4,6 +4,7 @@ import { onMounted, ref } from 'vue'
 import { supabase } from '@/lib/supabaseClient'
 import SideBar from '@/components/SideBar.vue'
 
+
 const userStore = useUserStore()
 const userSkills = ref([])
 const loading = ref(true)
@@ -44,7 +45,17 @@ onMounted(async () => {
       <h1>Welcome, {{ userStore.profile?.first_name || 'Guest' }}</h1>
       <p v-if="userStore.profile">Your Role: {{ userStore.profile.role }}</p>
 
-      <h2>Your Skill Ratings</h2>
+      <h2>Your Dashboard</h2>
+      <div v-if="userStore.profile?.role === 'Admin'">
+        <p>You’re an Admin. You can manage skills and users.</p>
+      </div>
+      <div v-else-if="userStore.profile?.role === 'Manager'">
+        <p>You’re a Manager. You’ll see team skill ratings here.</p>
+      </div>
+      <div v-else>
+        <p>Welcome! Track your skill development here.</p>
+      </div>
+
 
       <p v-if="loading">Loading your skills...</p>
 

@@ -1,12 +1,26 @@
 <script setup lang="js">
-import { computed } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { useUserStore } from '@/stores/userStore'
+import { useRoute } from 'vue-router'
 
 const userStore = useUserStore()
+const route = useRoute()
+
+const profileReady = ref(false)
+
+onMounted(async () => {
+  if (!userStore.profile) {
+    await userStore.fetchUser()
+  }
+  profileReady.value = true
+})
+
+const isOnSkillsPage = computed(() => route.path.startsWith('/skills'))
+const isAdmin = computed(() => userStore.profile?.role?.toLowerCase() === 'admin')
 
 const sidebarLinks = computed(() => {
   const links = [
-    { name: 'Dashboard', path: '/skills', icon: '🏠' },
+    { name: 'Dashboard', path: '/', icon: '🏠' },
     { name: 'Skills', path: '/skills', icon: '📋' },
   ]
 
@@ -22,17 +36,44 @@ const sidebarLinks = computed(() => {
 
   return links
 })
+
+const emit = defineEmits(['add-skill'])
 </script>
 
 <template>
   <aside class="sidebar">
     <nav class="nav-list">
-      <RouterLink v-for="link in sidebarLinks" :key="link.path" :to="link.path" class="card-link">
+      <RouterLink
+        v-for="link in sidebarLinks"
+        :key="link.path"
+        :to="link.path"
+        class="card-link"
+      >
         {{ link.icon }} {{ link.name }}
       </RouterLink>
     </nav>
+
+    <!-- ✅ Always visible debug output
+    <div style="color: yellow; font-size: 12px; padding: 8px;">
+      profileReady: {{ profileReady }} <br>
+      role: {{ userStore.profile?.role }} <br>
+      isAdmin: {{ isAdmin }} <br>
+      currentRoute: {{ route.path }} <br>
+      isOnSkillsPage: {{ isOnSkillsPage }}
+    </div> -->
+
+    <!-- Divider -->
+    <hr v-if="profileReady && isAdmin && isOnSkillsPage" class="divider" />
+
+    <!-- Add Skill Button for Admins on /skills -->
+    <div v-if="profileReady && isAdmin && isOnSkillsPage" class="nav-list">
+      <a class="card-link" @click.prevent="emit('add-skill')">
+        ➕ Add Skill
+      </a>
+    </div>
   </aside>
 </template>
+
 
 <style scoped>
 .sidebar {
@@ -62,9 +103,16 @@ const sidebarLinks = computed(() => {
   display: block;
   text-decoration: none;
   transition: background-color 0.2s ease;
+  cursor: pointer;
 }
 
 .card-link:hover {
   background-color: #4b5563;
+}
+
+.divider {
+  margin: 16px 12px 0;
+  border: none;
+  border-top: 1px solid #6b7280;
 }
 </style>

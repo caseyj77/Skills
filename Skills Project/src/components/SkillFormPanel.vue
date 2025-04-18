@@ -1,5 +1,6 @@
 <script setup lang="js">
-import { ref, watch } from 'vue'
+import { ref, watch, onMounted } from 'vue'
+import { supabase } from '@/lib/supabaseClient'
 
 // Props
 const props = defineProps({
@@ -10,11 +11,26 @@ const props = defineProps({
   },
 })
 
+// Reactive skill object
 const skill = ref({
   name: '',
   description: '',
+  profession_id: '',
 })
 
+// Load professions
+const professions = ref([])
+
+const fetchProfessions = async () => {
+  const { data, error } = await supabase.from('professions').select('*')
+  if (error) {
+    console.error('Error fetching professions:', error)
+    return
+  }
+  professions.value = data
+}
+
+// Watch for edit changes
 watch(
   () => props.editSkill,
   (newSkill) => {
@@ -22,13 +38,20 @@ watch(
       skill.value = {
         name: newSkill.name || '',
         description: newSkill.description || '',
+        profession_id: newSkill.profession_id || '',
       }
     } else {
-      skill.value = { name: '', description: '' }
+      skill.value = {
+        name: '',
+        description: '',
+        profession_id: '',
+      }
     }
   },
   { immediate: true },
 )
+
+onMounted(fetchProfessions)
 
 const emit = defineEmits(['save', 'cancel'])
 
@@ -53,6 +76,16 @@ function handleSubmit() {
       <div class="form-group">
         <label>Description</label>
         <textarea v-model="skill.description" rows="4"></textarea>
+      </div>
+
+      <div class="form-group">
+        <label>Profession</label>
+        <select v-model="skill.profession_id">
+          <option disabled value="">-- Select Profession --</option>
+          <option v-for="p in professions" :key="p.id" :value="p.id">
+            {{ p.name }}
+          </option>
+        </select>
       </div>
 
       <div class="form-actions">
@@ -122,7 +155,8 @@ function handleSubmit() {
 }
 
 .form-group input,
-.form-group textarea {
+.form-group textarea,
+.form-group select {
   width: 100%;
   padding: 8px;
   border-radius: 6px;
