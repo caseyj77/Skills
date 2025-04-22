@@ -1,61 +1,90 @@
 <script setup>
-import { ref, watch, onMounted } from 'vue';
-import { useSkillsStore } from '@/stores/skillsStore';
-import { useUserStore } from '@/stores/userStore';
-import { supabase } from '@/lib/supabaseClient';
-import SideBar from '@/components/SideBar.vue';
+import { ref, watch, onMounted, computed } from 'vue'
+import { useSkillsStore } from '@/stores/skillsStore'
+import { useUserStore } from '@/stores/userStore'
+import { useTaskRatingsStore } from '@/stores/taskRatingsStore'
+import { supabase } from '@/lib/supabaseClient'
+import SideBar from '@/components/SideBar.vue'
 import SkillFormPanel from '@/components/SkillFormPanel.vue'
 
-
-
 const showSkillPanel = ref(false)
-
 function openAddSkillPanel() {
   showSkillPanel.value = true
 }
-
 function closeSkillPanel() {
   showSkillPanel.value = false
 }
-
 function handleSkillSave(newSkill) {
-  // 👇 Later we’ll use adminSkillsStore here to save it
-  // For now, just close and refresh the skill list
   showSkillPanel.value = false
-
   if (selectedProfession.value) {
     skillsStore.fetchSkillsByProfession(selectedProfession.value)
   }
 }
-const skillsStore = useSkillsStore();
-const userStore = useUserStore();
 
-const professions = ref([]);
-const selectedProfession = ref(null);
+const skillsStore = useSkillsStore()
+const userStore = useUserStore()
+const taskRatingStore = useTaskRatingsStore()
+
+const professions = ref([])
+const selectedProfession = ref(null)
 
 const fetchProfessions = async () => {
-  const { data, error } = await supabase.from('professions').select('*');
+  const { data, error } = await supabase.from('professions').select('*')
   if (error) {
-    console.error('Error fetching professions:', error);
-    return;
+    console.error('Error fetching professions:', error)
+    return
   }
-  professions.value = data;
-};
+  professions.value = data
+}
 
 watch(selectedProfession, async (newVal) => {
   if (newVal) {
-    await skillsStore.fetchSkillsByProfession(newVal);
+    await skillsStore.fetchSkillsByProfession(newVal)
   }
-});
+})
 
-onMounted(async () => {
-  await fetchProfessions();
-});
+const userRatings = computed(() =>
+  Object.fromEntries(
+    Object.entries(taskRatingStore.taskRatings).map(([taskId, rating]) => [
+      taskId,
+      rating?.self_rating ?? '',
+    ])
+  )
+)
+
+const managerRatings = computed(() =>
+  Object.fromEntries(
+    Object.entries(taskRatingStore.taskRatings).map(([taskId, rating]) => [
+      taskId,
+      rating?.manager_rating ?? '—',
+    ])
+  )
+)
+
+async function updateSelfRating(taskId, value) {
+  await taskRatingStore.updateRatingForTask(taskId, value)
+}
+
+watch(
+  () => skillsStore.expandedSkills,
+  async (expanded) => {
+    const taskIds = expanded.flatMap(skillId =>
+      (skillsStore.tasks[skillId] || []).map(task => task.id)
+    )
+
+    if (userStore.user?.id && taskIds.length) {
+      await taskRatingStore.fetchRatingsForUser(userStore.user.id)
+    }
+  },
+  { deep: true }
+)
+
+onMounted(fetchProfessions)
 </script>
 
 <template>
   <div class="container">
-    <SideBar @add-skill="openAddSkillPanel"/>
+    <SideBar @add-skill="openAddSkillPanel" />
 
     <div class="main-content">
       <!-- Header Area -->
@@ -80,6 +109,44 @@ onMounted(async () => {
               <li v-for="skill in skillsStore.skills" :key="skill.id" class="skill-row">
                 <h3>{{ skill.name }}</h3>
                 <p>{{ skill.description }}</p>
+
+                <button class="toggle-btn" @click="skillsStore.toggleSkillTasks(skill.id)">
+                  {{ skillsStore.expandedSkills.includes(skill.id) ? 'Hide Tasks' : 'Show Tasks' }}
+                </button>
+
+                <div v-if="skillsStore.expandedSkills.includes(skill.id)">
+                  <table class="task-table">
+                    <thead>
+                      <tr>
+                        <th>Task</th>
+                        <th>Description</th>
+                        <th>Self Rating</th>
+                        <th>Manager Rating</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr v-if="skillsStore.taskLoading[skill.id]">
+                        <td colspan="4" class="loading">Loading tasks...</td>
+                      </tr>
+                      <tr v-for="task in skillsStore.tasks[skill.id]" :key="task.id">
+                        <td>{{ task.name }}</td>
+                        <td>{{ task.description }}</td>
+                        <td>
+                          <input
+                            type="number"
+                            min="1"
+                            max="5"
+                            v-model="userRatings[task.id]"
+                            @change="updateSelfRating(task.id, userRatings[task.id])"
+                          />
+                        </td>
+                        <td>
+                          {{ managerRatings[task.id] ?? '—' }}
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
               </li>
             </ul>
           </div>
@@ -91,6 +158,7 @@ onMounted(async () => {
       </main>
     </div>
   </div>
+
   <SkillFormPanel
     :visible="showSkillPanel"
     @cancel="closeSkillPanel"
@@ -165,9 +233,36 @@ onMounted(async () => {
   transition: background-color 0.2s ease;
 }
 
+.toggle-btn {
+  color: #7c3aed;
+  font-weight: 600;
+  cursor: pointer;
+  background: none;
+  border: none;
+  padding: 8px 0;
+}
+
+.toggle-btn:hover {
+  color: #a21caf;
+}
+
+.task-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 8px;
+}
+
+.task-table th,
+.task-table td {
+  padding: 8px 12px;
+  text-align: left;
+  border-bottom: 1px solid #e5e7eb;
+  font-size: 14px;
+}
+
 .loading {
-  text-align: center;
-  color: #6b7280;
+  font-style: italic;
+  color: #9ca3af;
   padding: 16px;
 }
 </style>
