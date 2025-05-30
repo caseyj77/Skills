@@ -21,9 +21,14 @@ function handleSkillSave(newSkill) {
   }
 }
 
-const skillsStore = useSkillsStore()
 const userStore = useUserStore()
+const skillsStore = useSkillsStore()
 const taskRatingStore = useTaskRatingsStore()
+
+const userRole = computed(() => (userStore.profile?.role || 'user').toLowerCase())
+const isAdmin = computed(() => userRole.value === 'admin')
+const isManager = computed(() => userRole.value === 'manager')
+const isUser = computed(() => userRole.value === 'user')
 
 const professions = ref([])
 const selectedProfession = ref(null)
@@ -84,10 +89,13 @@ onMounted(fetchProfessions)
 
 <template>
   <div class="container">
-    <SideBar @add-skill="openAddSkillPanel" />
+    <!-- Sidebar Column -->
+    <div class="sidebar-column">
+      <SideBar :canAddSkill="isAdmin || isManager" @add-skill="openAddSkillPanel" />
+    </div>
 
+    <!-- Main Content Column -->
     <div class="main-content">
-      <!-- Header Area -->
       <div class="header">
         <div class="dropdown-wrapper">
           <label for="profession">Select Profession:</label>
@@ -100,7 +108,6 @@ onMounted(fetchProfessions)
         </div>
       </div>
 
-      <!-- Main Area -->
       <main class="main">
         <div class="inner">
           <div v-if="skillsStore.skills.length" class="table-wrapper">
@@ -132,13 +139,18 @@ onMounted(fetchProfessions)
                         <td>{{ task.name }}</td>
                         <td>{{ task.description }}</td>
                         <td>
-                          <input
-                            type="number"
-                            min="1"
-                            max="5"
-                            v-model="userRatings[task.id]"
-                            @change="updateSelfRating(task.id, userRatings[task.id])"
-                          />
+                          <template v-if="isUser">
+                            <input
+                              type="number"
+                              min="1"
+                              max="5"
+                              v-model="userRatings[task.id]"
+                              @change="updateSelfRating(task.id, userRatings[task.id])"
+                            />
+                          </template>
+                          <template v-else>
+                            {{ userRatings[task.id] || '—' }}
+                          </template>
                         </td>
                         <td>
                           {{ managerRatings[task.id] ?? '—' }}
@@ -164,6 +176,10 @@ onMounted(fetchProfessions)
     @cancel="closeSkillPanel"
     @save="handleSkillSave"
   />
+
+  <p style="margin: 1rem 0; padding: 0.5rem; background: #f0f0f0;">
+    Logged in as: <strong>{{ userRole }}</strong>
+  </p>
 </template>
 
 <style scoped>
@@ -174,10 +190,18 @@ onMounted(fetchProfessions)
   color: #1f2937;
 }
 
+.sidebar-column {
+  width: 250px;
+  background-color: var(--electric-purple);
+  border-right: 1px solid #e5e7eb;
+  box-shadow: 2px 0 4px rgba(0, 0, 0, 0.05);
+}
+
 .main-content {
   flex: 1;
   display: flex;
   flex-direction: column;
+  overflow: hidden;
 }
 
 .header {
