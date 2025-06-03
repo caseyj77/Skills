@@ -70,6 +70,13 @@ const emit = defineEmits(['add-skill'])
       <a class="card-link" @click.prevent="emit('add-skill')">
         ➕ Add Skill
       </a>
+      <a class="card-link" @click.prevent="emit('view-employees')">
+        View Employees
+      </a>
+      <a class="card-link" @click.prevent="emit('add-skill')">
+        ➕ Employee
+      </a>
+      
     </div>
   </aside>
 </template>

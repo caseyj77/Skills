@@ -8,6 +8,8 @@ export const useUserStore = defineStore('user', {
     profile: null,
     loading: false,
     errorMessage: null,
+    employees: [],
+
   }),
 
   actions: {
@@ -94,5 +96,24 @@ export const useUserStore = defineStore('user', {
       const skillsStore = useSkillsStore()
       skillsStore.resetStore()
     },
+
+     async fetchEmployees() {
+    try {
+      const { data, error } = await supabase
+        .from('profiles') // assumes all employees are in the 'profiles' table
+        .select('id, username, email, role, skills'); // adjust fields based on your schema
+      if (error) throw error;
+      this.employees = data.map(emp => ({
+        id: emp.id,
+        name: emp.username,
+        email: emp.email,
+        role: emp.role,
+        skills: emp.skills || [],
+      }));
+    } catch (error) {
+      console.error('Error fetching employees:', error);
+      this.employees = [];
+    }
   },
-})
+},
+});
