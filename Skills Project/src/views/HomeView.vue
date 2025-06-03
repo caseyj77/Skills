@@ -15,7 +15,7 @@ async function fetchUserSkills() {
   const { data, error } = await supabase
     .from('user_skills')
     .select('skill_id, rating, skills(name)')
-    .eq('user_id', userStore.user.id)
+    .eq('user_id', userStore.profile?.id)
     .order('rating', { ascending: false })
 
   if (error) {

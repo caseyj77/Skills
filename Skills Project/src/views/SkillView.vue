@@ -78,7 +78,7 @@ watch(
     )
 
     if (userStore.user?.id && taskIds.length) {
-      await taskRatingStore.fetchRatingsForUser(userStore.user.id)
+      await taskRatingStore.fetchRatingsForUser(userStore.profile.id)
     }
   },
   { deep: true }
