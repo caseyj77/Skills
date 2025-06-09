@@ -29,17 +29,17 @@ const calculateProgress = async () => {
 
   const taskIds = tasks.map(t => t.id)
 
-  // Step 3: Get task_ratings for this employee
+  // Step 3: Get user_task_ratings for this employee
   const { data: ratings, error: ratingsError } = await supabase
-    .from('task_ratings')
-    .select('task_id, rating')
-    .eq('user_id', props.employeeId)
+    .from('user_task_ratings')
+    .select('task_id, self_rating')
+    .eq('profile_id', props.employeeId)
     .in('task_id', taskIds)
 
-  if (ratingsError) return
+  if (ratingsError || !ratings) return
 
   // Step 4: Calculate % of tasks that have a rating
-  const ratedCount = ratings.filter(r => r.rating !== null).length
+  const ratedCount = ratings.filter(r => r.self_rating !== null).length
   progress.value = Math.round((ratedCount / taskIds.length) * 100)
 }
 
@@ -47,6 +47,7 @@ onMounted(() => {
   calculateProgress()
 })
 </script>
+
 
 <template>
   <div class="progress-bar-container">
