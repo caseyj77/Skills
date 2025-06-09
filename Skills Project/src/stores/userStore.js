@@ -101,7 +101,7 @@ export const useUserStore = defineStore('user', {
     try {
       const { data, error } = await supabase
         .from('profiles') // assumes all employees are in the 'profiles' table
-        .select('id, username, email, role, skills'); // adjust fields based on your schema
+        .select('*'); // adjust fields based on your schema
       if (error) throw error;
       this.employees = data.map(emp => ({
         id: emp.id,
