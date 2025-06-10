@@ -104,7 +104,7 @@ watch(
                     <template v-else>
                       <input
                         type="number"
-                        min="0"
+                        min="1"
                         max="5"
                         v-model="userRatings[task.id]"
                         @change="updateSelfRating(task.id, userRatings[task.id])"

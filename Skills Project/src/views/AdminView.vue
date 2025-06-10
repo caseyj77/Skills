@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from 'vue'
+import { ref, reactive } from 'vue'
 import { useEmployeesStore } from '@/stores/employeesStore'
 import DashboardLayout from '@/components/layouts/DashboardLayout.vue'
 import SkillMatrix from '@/components/SkillMatrix.vue'
@@ -28,6 +28,8 @@ const saveEmployee = async (employee) => {
   const success = await employeesStore.editEmployee(employee)
   if (success) closeEditPanel()
 }
+
+const showTasks = reactive({});
 </script>
 
 <template>
@@ -51,18 +53,26 @@ const saveEmployee = async (employee) => {
             <p><strong>Phone:</strong> {{ emp.phone_number }}</p>
             <p><strong>Profession:</strong> {{ emp.professions?.name || 'Not Assigned' }}</p>
 
-            <SkillMatrix
-              :userId="emp.id"
-              :professionId="emp.primary_profession_id"
-              :adminMode="true"
-            />
+            <div class="button-row">
+              <button class="toggle-btn" @click="showTasks[emp.id] = !showTasks[emp.id]">
+                {{ showTasks[emp.id] ? 'Hide All Skills' : 'Show All Skills' }}
+              </button>
 
-            <button @click="startEdit(emp)">Edit</button>
+              <button class="toggle-btn" @click="startEdit(emp)">Edit</button>
+            </div>
+
+            <div v-if="showTasks[emp.id]" class="employee-details">
+              <SkillMatrix
+                :userId="emp.id"
+                :professionId="emp.primary_profession_id"
+                :adminMode="true"
+              />
+            </div>
           </div>
         </div>
       </div>
 
-      <!-- Edit Side Panel -->
+      <!-- ✅ Moved OUTSIDE the loop -->
       <EmployeeEditFormPanel
         :visible="showEditPanel"
         :editEmployee="editEmployee"
@@ -72,6 +82,7 @@ const saveEmployee = async (employee) => {
     </div>
   </DashboardLayout>
 </template>
+
 
 <style scoped>
 .admin-panel {
@@ -92,5 +103,21 @@ const saveEmployee = async (employee) => {
 
 .employee-details {
   margin-top: 0.5rem;
+}
+.button-row {
+  display: flex;
+  gap: 0.5rem; /* or 8px */
+  margin-top: 0.5rem;
+}
+
+.toggle-btn {
+  margin-top: 0.5rem;
+  background-color: #7c3aed;
+  color: white;
+  padding: 6px 12px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  
 }
 </style>
