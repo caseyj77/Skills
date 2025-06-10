@@ -5,7 +5,8 @@ import { useSkillsStore } from '@/stores/skillsStore'
 import { useUserStore } from '@/stores/userStore'
 import { useTaskRatingsStore } from '@/stores/taskRatingsStore'
 import { supabase } from '@/lib/supabaseClient'
-import SideBar from '@/components/SideBar.vue'
+
+import DashboardLayout from '@/components/layouts/DashboardLayout.vue'
 import SkillFormPanel from '@/components/SkillFormPanel.vue'
 import EmployeeList from '@/components/EmployeeList.vue'
 
@@ -87,138 +88,99 @@ watch(
 )
 
 onMounted(async () => {
-  await userStore.fetchUser() // ✅ Guarantees both user and profile are loaded
+  await userStore.fetchUser()
   await fetchProfessions()
 })
-
 </script>
 
+
 <template>
-  <div class="container">
-    <!-- Sidebar Column -->
-    <div class="sidebar-column">
-      <SideBar :canAddSkill="isAdmin || isManager" @add-skill="openAddSkillPanel" />
-    </div>
+  <DashboardLayout :canAddSkill="isAdmin || isManager" :onAddSkill="openAddSkillPanel">
+    <EmployeeList v-if="isAdmin" />
 
-    <!-- Main Content Column -->
-    <div class="main-content">
-      <!-- Conditionally show EmployeeList for admins -->
-      <EmployeeList v-if="isAdmin" />
-
-      <!-- Skill interface for users and managers -->
-      <div v-else>
-        <div class="header">
-          <div class="dropdown-wrapper">
-            <label for="profession">Select Profession:</label>
-            <select v-model="selectedProfession" id="profession">
-              <option disabled value="">-- Choose a Profession --</option>
-              <option v-for="p in professions" :key="p.id" :value="p.id">
-                {{ p.name }}
-              </option>
-            </select>
-          </div>
+    <div v-else>
+      <div class="header">
+        <div class="dropdown-wrapper">
+          <label for="profession">Select Profession:</label>
+          <select v-model="selectedProfession" id="profession">
+            <option disabled value="">-- Choose a Profession --</option>
+            <option v-for="p in professions" :key="p.id" :value="p.id">
+              {{ p.name }}
+            </option>
+          </select>
         </div>
+      </div>
 
-        <main class="main">
-          <div class="inner">
-            <div v-if="skillsStore.skills.length" class="table-wrapper">
-              <h2>Skills for Selected Profession:</h2>
-              <ul>
-                <li v-for="skill in skillsStore.skills" :key="skill.id" class="skill-row">
-                  <h3>{{ skill.name }}</h3>
-                  <p>{{ skill.description }}</p>
+      <div class="table-wrapper" v-if="skillsStore.skills.length">
+        <h2>Skills for Selected Profession:</h2>
+        <ul>
+          <li v-for="skill in skillsStore.skills" :key="skill.id" class="skill-row">
+            <h3>{{ skill.name }}</h3>
+            <p>{{ skill.description }}</p>
 
-                  <button class="toggle-btn" @click="skillsStore.toggleSkillTasks(skill.id)">
-                    {{ skillsStore.expandedSkills.includes(skill.id) ? 'Hide Tasks' : 'Show Tasks' }}
-                  </button>
+            <button class="toggle-btn" @click="skillsStore.toggleSkillTasks(skill.id)">
+              {{ skillsStore.expandedSkills.includes(skill.id) ? 'Hide Tasks' : 'Show Tasks' }}
+            </button>
 
-                  <div v-if="skillsStore.expandedSkills.includes(skill.id)">
-                    <table class="task-table">
-                      <thead>
-                        <tr>
-                          <th>Task</th>
-                          <th>Description</th>
-                          <th>Self Rating</th>
-                          <th>Manager Rating</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <tr v-if="skillsStore.taskLoading[skill.id]">
-                          <td colspan="4" class="loading">Loading tasks...</td>
-                        </tr>
-                        <tr v-for="task in skillsStore.tasks[skill.id]" :key="task.id">
-                          <td>{{ task.name }}</td>
-                          <td>{{ task.description }}</td>
-                          <td>
-                            <template v-if="isUser">
-                              <input
-                                type="number"
-                                min="1"
-                                max="5"
-                                v-model="userRatings[task.id]"
-                                @change="updateSelfRating(task.id, userRatings[task.id])"
-                              />
-                            </template>
-                            <template v-else>
-                              {{ userRatings[task.id] || '—' }}
-                            </template>
-                          </td>
-                          <td>
-                            {{ managerRatings[task.id] ?? '—' }}
-                          </td>
-                        </tr>
-                      </tbody>
-                    </table>
-                  </div>
-                </li>
-              </ul>
+            <div v-if="skillsStore.expandedSkills.includes(skill.id)">
+              <table class="task-table">
+                <thead>
+                  <tr>
+                    <th>Task</th>
+                    <th>Description</th>
+                    <th>Self Rating</th>
+                    <th>Manager Rating</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr v-if="skillsStore.taskLoading[skill.id]">
+                    <td colspan="4" class="loading">Loading tasks...</td>
+                  </tr>
+                  <tr v-for="task in skillsStore.tasks[skill.id]" :key="task.id">
+                    <td>{{ task.name }}</td>
+                    <td>{{ task.description }}</td>
+                    <td>
+                      <template v-if="isUser">
+                        <input
+                          type="number"
+                          min="1"
+                          max="5"
+                          v-model="userRatings[task.id]"
+                          @change="updateSelfRating(task.id, userRatings[task.id])"
+                        />
+                      </template>
+                      <template v-else>
+                        {{ userRatings[task.id] || '—' }}
+                      </template>
+                    </td>
+                    <td>{{ managerRatings[task.id] ?? '—' }}</td>
+                  </tr>
+                </tbody>
+              </table>
             </div>
+          </li>
+        </ul>
+      </div>
 
-            <div v-else-if="selectedProfession" class="loading">
-              <p>No skills found for this profession.</p>
-            </div>
-          </div>
-        </main>
+      <div v-else-if="selectedProfession" class="loading">
+        <p>No skills found for this profession.</p>
       </div>
     </div>
-  </div>
 
-  <SkillFormPanel
-    :visible="showSkillPanel"
-    @cancel="closeSkillPanel"
-    @save="handleSkillSave"
-  />
+    <SkillFormPanel
+      :visible="showSkillPanel"
+      @cancel="closeSkillPanel"
+      @save="handleSkillSave"
+    />
 
-  <p style="margin: 1rem 0; padding: 0.5rem; background: #f0f0f0;">
-    Logged in as: <strong>{{ userRole }}</strong>
-  </p>
+
+  </DashboardLayout>
 </template>
 
 <style scoped>
-.container {
-  display: flex;
-  height: 100vh;
-  background-color: #f3f4f6;
-  color: #1f2937;
-}
-
-.sidebar-column {
-  width: 250px;
-  background-color: var(--electric-purple);
-  border-right: 1px solid #e5e7eb;
-  box-shadow: 2px 0 4px rgba(0, 0, 0, 0.05);
-}
-
-.main-content {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-}
-
 .header {
   padding: 16px 24px;
-  background-color: #ffffff;
+  background-color: var(--deep-midnight-blue);
   border-bottom: 1px solid #e5e7eb;
 }
 
@@ -255,7 +217,7 @@ onMounted(async () => {
 .table-wrapper {
   overflow-x: auto;
   border-radius: 8px;
-  background-color: #ffffff;
+  background-color: (var(--deep-midnight-blue));
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
@@ -265,7 +227,7 @@ onMounted(async () => {
 }
 
 .skill-row:hover {
-  background-color: #f9fafb;
+  background-color: #6e6767;
   transition: background-color 0.2s ease;
 }
 

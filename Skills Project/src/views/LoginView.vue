@@ -1,12 +1,11 @@
 <script setup lang="js">
 import LoginForm from '@/components/LoginForm.vue'
-import SideBar from '@/components/SideBar.vue'
+import DashboardLayout from '@/components/layouts/DashboardLayout.vue'
 </script>
 
 <template>
-  <SideBar />
-
-  <LoginForm />
+  <DashboardLayout>
+    
+   <LoginForm />
+  </DashboardLayout>
 </template>
-
-<style lang="css" scoped></style>
