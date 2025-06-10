@@ -53,15 +53,7 @@ const emit = defineEmits(['add-skill'])
       </RouterLink>
     </nav>
 
-    <!-- ✅ Always visible debug output
-    <div style="color: yellow; font-size: 12px; padding: 8px;">
-      profileReady: {{ profileReady }} <br>
-      role: {{ userStore.profile?.role }} <br>
-      isAdmin: {{ isAdmin }} <br>
-      currentRoute: {{ route.path }} <br>
-      isOnSkillsPage: {{ isOnSkillsPage }}
-    </div> -->
-
+ 
     <!-- Divider -->
     <hr v-if="profileReady && isAdmin && isOnSkillsPage" class="divider" />
 
@@ -70,6 +62,11 @@ const emit = defineEmits(['add-skill'])
       <a class="card-link" @click.prevent="emit('add-skill')">
         ➕ Add Skill
       </a>
+      
+      <a class="card-link" @click.prevent="emit('add-skill')">
+        ➕ Add Employee
+      </a>
+      
     </div>
   </aside>
 </template>
@@ -83,9 +80,6 @@ const emit = defineEmits(['add-skill'])
   color: white;
   display: flex;
   flex-direction: column;
-  box-shadow: 4px 0 8px var(--electric-purple);
-  border-top: 1px solid var(--electric-purple);
-  border-right: 1px solid var(--electric-purple);
 }
 
 .nav-list {

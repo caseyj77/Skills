@@ -1,35 +1,57 @@
 <script setup>
-import { createClient } from '@supabase/supabase-js'
+import { supabase } from '@/lib/supabaseClient'
 
-// Temporarily use your service role key here
-const supabase = createClient(
-  import.meta.env.VITE_SUPABASE_URL,
-  import.meta.env.VITE_SUPABASE_SERVICE_ROLE_KEY
-)
-
-
-const createTestUsers = async () => {
+async function createTestUsers() {
+  try {
     const { data: user1, error: error1 } = await supabase.auth.admin.createUser({
       email: 'testuser@example.com',
-      password: 'Password#1',
+      password: 'password123',
       email_confirm: true,
     })
-  
+
     const { data: user2, error: error2 } = await supabase.auth.admin.createUser({
       email: 'testmanager@example.com',
-      password: 'Password#1',
+      password: 'password123',
       email_confirm: true,
     })
-  
-    console.log('Test User:', user1, error1)
-    console.log('Test Manager:', user2, error2)
+
+    if (error1 || error2) {
+      console.error('Error creating users:', error1 || error2)
+      return
+    }
+
+    // Optional: Replace with real UUIDs from your professions table
+    const defaultProfessionId = '00000000-0000-0000-0000-000000000000'
+
+    const { error: profileError } = await supabase.from('profiles').insert([
+      {
+        id: user1.user.id,
+        username: 'testuser',
+        role: 'User',
+        primary_profession_id: defaultProfessionId,
+      },
+      {
+        id: user2.user.id,
+        username: 'testmanager',
+        role: 'Manager',
+        primary_profession_id: defaultProfessionId,
+      },
+    ])
+
+    if (profileError) {
+      console.error('Error inserting profiles:', profileError)
+    } else {
+      console.log('Test users and profiles created successfully.')
+    }
+  } catch (err) {
+    console.error('Unexpected error creating test users:', err)
   }
-  </script>
-  
-  <template>
-    <div class="p-4">
-      <button @click="createTestUsers" class="bg-blue-600 text-white px-4 py-2 rounded">
-        Create Test Users
-      </button>
-    </div>
-  </template>
+}
+</script>
+
+<template>
+  <div>
+    <h2>Create Test Users</h2>
+    <button @click="createTestUsers">Create Users</button>
+  </div>
+</template>

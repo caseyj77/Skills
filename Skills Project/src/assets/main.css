@@ -1,22 +1,18 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
 :root {
   /* Primary Colors */
-  --neon-cyan: #00e5ff; /* Vibrant accent */
-  --electric-purple: #8a00e5; /* Sleek and modern */
-  --hot-magenta: #ff007a; /* Dynamic highlights */
+  --neon-cyan: #00e5ff;
+  --electric-purple: #8a00e5;
+  --hot-magenta: #ff007a;
 
   /* Secondary Colors */
-  --deep-midnight-blue: #1a1f38; /* Dark grounding background */
-  --dark-violet: #460a63; /* Strong futuristic contrast */
-  --steel-blue: #607d99; /* Muted balance tone */
+  --deep-midnight-blue: #1a1f38;
+  --dark-violet: #460a63;
+  --steel-blue: #607d99;
 
   /* Neutral Colors */
-  --charcoal-black: #121212; /* Perfect for dark mode elements */
-  --soft-glow-gray: #e9dadd; /* Light neutral balance */
-  --muted-indigo: #525564; /* Secondary text color */
+  --charcoal-black: #121212;
+  --soft-glow-gray: #e9dadd;
+  --muted-indigo: #525564;
 }
 
 /* Global Background */
