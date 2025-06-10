@@ -217,7 +217,7 @@ onMounted(async () => {
 .table-wrapper {
   overflow-x: auto;
   border-radius: 8px;
-  background-color: (var(--deep-midnight-blue));
+  background-color: var(--deep-midnight-blue);
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
