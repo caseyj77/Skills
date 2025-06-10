@@ -25,7 +25,7 @@ export const useEmployeesStore = defineStore('employees', () => {
         professions:primary_profession_id (name)
       `)
       .eq('company_id', companyId)
-      .neq('role', 'Admin')
+      // .neq('role', 'Admin')
 
     if (error) {
       console.error('Error fetching employees:', error)

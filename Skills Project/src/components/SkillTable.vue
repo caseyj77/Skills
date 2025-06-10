@@ -1,3 +1,4 @@
+// SkillTable.vue
 <script setup>
 import { useSkillsStore } from '@/stores/skillsStore'
 import { onMounted, reactive } from 'vue'

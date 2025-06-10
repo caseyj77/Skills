@@ -16,7 +16,7 @@ onMounted(async () => {
   profileReady.value = true
 })
 
-const isOnSkillsPage = computed(() => route.path.startsWith('/skills'))
+const isOnAdminPage = computed(() => route.path.startsWith('/admin'))
 const isAdmin = computed(() => userStore.profile?.role?.toLowerCase() === 'admin')
 
 const sidebarLinks = computed(() => {
@@ -56,10 +56,10 @@ const emit = defineEmits(['add-skill'])
 
  
     <!-- Divider -->
-    <hr v-if="profileReady && isAdmin && isOnSkillsPage" class="divider" />
+    <hr v-if="profileReady && isAdmin && isOnAdminPage" class="divider" />
 
     <!-- Add Skill Button for Admins on /skills -->
-    <div v-if="profileReady && isAdmin && isOnSkillsPage" class="nav-list">
+    <div v-if="profileReady && isAdmin && isOnAdminPage" class="nav-list">
       <a class="card-link" @click.prevent="emit('add-skill')">
         ➕ Add Skill
       </a>

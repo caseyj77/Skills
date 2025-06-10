@@ -18,6 +18,10 @@ export const useUserStore = defineStore('user', {
   isAdmin: (state) => state.profile?.role?.toLowerCase() === 'admin',
   isManager: (state) => state.profile?.role?.toLowerCase() === 'manager',
   isProfileReady: (state) => !!state.profile,
+   isUser: (state) => {
+    const role = state.profile?.role?.toLowerCase()
+    return role !== 'admin' && role !== 'manager'
+  },
 },
 
 
