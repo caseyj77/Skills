@@ -1,15 +1,11 @@
+//NavBar.vue
 <script setup>
-import { useUserStore } from '../stores/userStore'
+import { useUserStore } from '@/stores/userStore'
 import { useRouter } from 'vue-router'
-import { computed } from 'vue'
 
 const userStore = useUserStore()
 const router = useRouter()
 
-// Check if the user is logged in
-const isLoggedIn = computed(() => !!userStore.user)
-
-// Handle logout action
 const handleLogout = async () => {
   await userStore.signOut()
   router.push('/login')
@@ -18,25 +14,34 @@ const handleLogout = async () => {
 
 <template>
   <nav class="navbar">
+    <!-- Left: Logo + Brand -->
     <div class="navbar-left">
       <img src="../assets/images/SF Logo.webp" alt="SkillForge logo" class="logo" />
       <span class="brand-name">SkillForge</span>
     </div>
 
+    <!-- Middle: Navigation Links -->
     <div class="navbar-middle">
       <ul class="nav-links">
         <li><RouterLink to="/">Home</RouterLink></li>
         <li><RouterLink to="/skills">Skills</RouterLink></li>
-        <li v-if="!isLoggedIn">
+
+        <li v-if="userStore.isProfileReady && userStore.isAdmin">
+          <RouterLink to="/admin">Admin Panel</RouterLink>
+        </li>
+
+        <li v-if="!userStore.isLoggedIn">
           <RouterLink to="/login">Login</RouterLink>
         </li>
+
         <li v-else>
           <a href="#" @click.prevent="handleLogout">Logout</a>
         </li>
       </ul>
     </div>
 
-    <div class="navbar-right" v-if="isLoggedIn">
+    <!-- Right: Avatar -->
+    <div class="navbar-right" v-if="userStore.isLoggedIn">
       <div class="user-profile">
         <img src="../assets/images/user-avatar.svg" alt="User Avatar" class="avatar" />
       </div>
@@ -44,7 +49,7 @@ const handleLogout = async () => {
   </nav>
 </template>
 
-<style lang="css" scoped>
+<style scoped>
 /* Navbar container */
 .navbar {
   display: flex;

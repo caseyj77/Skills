@@ -1,3 +1,4 @@
+import AdminView from '@/views/AdminView.vue'
 import HomeView from '@/views/HomeView.vue'
 import LoginView from '@/views/LoginView.vue'
 import SkillView from '@/views/SkillView.vue'
@@ -21,6 +22,11 @@ const router = createRouter({
       path: '/skills',
       name: 'skills',
       component: SkillView,
+    },
+    {
+      path: '/admin',
+      name: 'admin',
+      component: AdminView,
     },
   ],
 })

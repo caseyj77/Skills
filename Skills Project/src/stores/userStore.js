@@ -1,3 +1,4 @@
+// userStore.js
 import { defineStore } from 'pinia'
 import { supabase } from '@/lib/supabaseClient'
 import { useSkillsStore } from './skillsStore'
@@ -11,6 +12,14 @@ export const useUserStore = defineStore('user', {
     employees: [],
 
   }),
+// Getters used to determine user role
+  getters: {
+  isLoggedIn: (state) => !!state.user,
+  isAdmin: (state) => state.profile?.role?.toLowerCase() === 'admin',
+  isManager: (state) => state.profile?.role?.toLowerCase() === 'manager',
+  isProfileReady: (state) => !!state.profile,
+},
+
 
   actions: {
 

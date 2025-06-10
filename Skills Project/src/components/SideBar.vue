@@ -1,3 +1,4 @@
+//SideBar.vue
 <script setup lang="js">
 import { ref, computed, onMounted } from 'vue'
 import { useUserStore } from '@/stores/userStore'
@@ -25,7 +26,7 @@ const sidebarLinks = computed(() => {
   ]
 
   if (userStore.profile?.role === 'admin') {
-    links.push({ name: 'Admin Panel', path: '/', icon: '🛠️' })
+    links.push({ name: 'Admin Panel', path: '/admin', icon: '🛠️' })
   }
 
   if (userStore.profile?.role === 'manager') {
@@ -63,7 +64,7 @@ const emit = defineEmits(['add-skill'])
         ➕ Add Skill
       </a>
       
-      <a class="card-link" @click.prevent="emit('add-skill')">
+      <a class="card-link" @click.prevent="emit('add-employee')">
         ➕ Add Employee
       </a>
       
